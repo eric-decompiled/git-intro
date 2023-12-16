@@ -5,19 +5,25 @@ Repo: (https://github.com/eric-decompiled/git-intro)
 ## What is Git?
   Version control, used to manage code basis. Alternatives exist, but git is by far, the most popular
 ## Why use Git?
-  Lets you have a historical record of how the code base evolved
+  Lets you have a historical record of how the code base evolved, and collaborate with others
 ## Installing Git
+ Depends on your OS:
  [Instructions here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ## Configuring Git
 
-Set user name + email
+- Set user name + email
   `git config --global user.name`
   `git config --global user.email`
 
-(This can be overrode per repo by leaving out `--global`)
+(These can be overrode per repo by leaving out `--global`)
 
-### (Optional) set up some shortcuts
+- Set editor, should default to something though
+  `git config --global core.editor vim`
+
+`git config --list` shows current config
+
+## (Optional) set up some shortcuts
 ```sh
 git config --global alias.co checkout
 git config --global alias.br branch
@@ -28,21 +34,16 @@ git config --global alias.sw switch
 
 [Reference](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases)
 
-### FYI
-  You can cryptographically sign commits [read more](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work) (advanced)
-
 ## Git Basics
 
-
-Initialize a new git repository:
-  `git init`
-
-This creates a `.git` folder that will store the information git needs to work.
-
-Note: Make sure you are not already in a git directory (Does `git status` work?). Nested git repos should be avoided
-
+- Navigate to a directory you want to version control
+- Initialize a new git repository with: `git init`
+- This creates a `.git` folder that will store the information git needs to work.
+- Note: Make sure you are not already in a git directory (Does `git status` work?). Nested git repos should be avoided
 
 ## Basic commands
+  Commands for basic usage
+
   `git status`           See what files have changed
   `git diff`             Show file changes from previous change
   `git add -a`           Add all files in "staging" area
@@ -51,13 +52,16 @@ Note: Make sure you are not already in a git directory (Does `git status` work?)
   `git diff --staged`    I almost always run this before commit
   `git commit`           Write staging area to the history
 
+(demo/work along)
+
 ## ⚠️ WARNING: NEVER COMMIT CREDENTIALS!
 
-If you do accidentally commit, rotate the credential. Git keeps a "ref log" of everything
+- If you do accidentally commit, rotate the credential. Git keeps a "ref log" of everything, it can be difficult to truly remove
 
+## Ignoring files
 Make a `.gitignore` file, put dev secrets in a `.env`. Add `.env` to `.gitignore`
 
-Each project should have a `.gitignore`
+Each project should have a `.gitignore` which contains:
 
 - Ignore `.env`,
 - library files (.e.g `node_modules`)
@@ -66,13 +70,14 @@ Each project should have a `.gitignore`
 
 e.g.
 ```
-.DS_STORE # Mac OS
-.vscode   # Code editor
+.env
+node_modules/
+dist/
 ```
 
-And config depending on OS
-
 ### with dotenv
+
+dotenv is a library implemented for most languages that will auto load `.env` variables
 
 .env:
 ```
@@ -80,8 +85,11 @@ MY_API_KEY=someSecret
 ```
 
 ### (0 tech version)
+
+You don't need a library if you are willing to source secrets
+
 ```
-MY_API_KEY=someSecret
+export MY_API_KEY=someSecret
 ```
 
 then
@@ -90,11 +98,13 @@ source .env
 ```
 
 ### Accessing secrets
-In code use `apiKey = os.getEnv('MY_API_KEY)`
+In code use `apiKey = os.getEnv('MY_API_KEY')`
 
 ### Creating global ignore
 
 Coder's personal editor shouldn't be in a shared repo. Consider setting up a global ignore
+
+e.g. `.vscode`, vim's `.swp`, MacOS `.DS_STORE`, etc.
 
 [Guide](`https://gist.github.com/subfuzion/db7f57fff2fb6998a16c`)
 
@@ -104,54 +114,64 @@ Coder's personal editor shouldn't be in a shared repo. Consider setting up a glo
 
 ## Git Remote
 
-  Git histories can be synced across computers. Your local repository can define remotes to sync with
+Git histories can be synced across computers. Your local repository can define remotes to sync with
 
-  There are many services that will host a git server and provide a GUI and additional tooling.
+There are many services that will host a git server and provide a GUI and additional tooling.
 
-  Examples:
-  GitHub (The most popular, owned by Microsoft)
-  Gitea (Open source. Good if you want to host your own)
-  GitLab (An open source alternative, tries to be all in one software manager)
+Examples:
+  - GitHub (The most popular, owned by Microsoft)
+  - Gitea (Open source. Good if you want to host your own)
+  - GitLab (GitHub competitor)
 
 ### Adding a remote repository
 
-  First create a project on GitHub, then:
+First create a repository on GitHub, then:
 
   `git remote add origin ssh://...`
   - URL will be copied from the UI
-  - (Can use https://, but i think it needs your password each time)
+
+  - (Can use https://, but i think it needs your username/password each time)
+  - SSH will require an SSH key set
 
 ### Syncing with remote repository
 
-  `git push origin main` (Push your current changes to the `main` branch)
-  `git pull origin main` (Fetch the latest changes from the `main` branch)
+  - `git push origin main` (Push your current changes to the `main` branch)
+  - `git pull origin main` (Fetch the latest changes from the `main` branch)
 
   Note: The names `origin` and `main` are used by convention. You can call branches and remote repos whatever you want
 
 ### Git Branching
 
-Generally developers will not commit to `main`, but create a branch
+  Generally developers will not commit to `main`, but create a branch
 
-A branch is a named pointer that will advance when branches are committed to
+  A branch is a named pointer that will advance when branches are committed to
 
 ### Creating branches
-  to make a new branch use
+  to make a new branch use:
+
   `git switch -c alpha` (make and changes to alpha branch, based off of current branch)
 
   A branch name should be short but descriptive
 
 ### Switching between branches
-  To change branches use `git switch $BRANCH_NAME`,
+
+To change branches use `git switch $BRANCH_NAME`,
 
 ### Git Merging
 
 `git merge` lets branches be synced
 
 You can merge branches locally:
+- First switch to the branch that should be updated
 `git switch main`
+
+- Then merge the branch you want to update with
 `git merge alpha`
 
+This will update `main` with the latest changes from `alpha`
+
 ### Industry Practice
+
 Normally a "Pull Request" is created and work is reviewed. The merge will be done on the remote repo
 
 In addition to a coworker reviewing your code, automated checks maybe performed on the code:
@@ -160,7 +180,7 @@ In addition to a coworker reviewing your code, automated checks maybe performed 
   - Automated unit tests are ran. If a test fails it should block the PR
   - Static analysis tools maybe used (detect unsafe methods like `eval()`, flag complicated functions)
 
-### Git Conflict Resolution
+### Git Conflict
 When two people edit the same line of code in two branches git will not be able to tell which version it should use
 
 It will mark the code with both versions. The correct version must be manually chosen
@@ -189,6 +209,7 @@ git stash pop ## restores in progress work
 Here are some more complex commands for git, they aren't essential for day to day use though:
 
 `git rebase` helps keep git history clean by "rewriting history". Should never be done to shared branches
+`git commit --amend` Lets you rewrite the last commit (You will need to "force push" to update a remote)
 `git cherry-pick $COMMIT_HASH` applies commit to working branch. Helpful for porting bug fixes to older versions
 `git bisect` binary search to find where a bug was introduced
 `git revert` undoes a commit by applying an opposite change set
