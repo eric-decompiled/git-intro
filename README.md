@@ -208,10 +208,14 @@ git stash pop ## restores in progress work
 
 Here are some more complex commands for git, they aren't essential for day to day use though:
 
-`git rebase` helps keep git history clean by "rewriting history". Should never be done to shared branches
-`git commit --amend` Lets you rewrite the last commit (You will need to "force push" to update a remote)
-`git cherry-pick $COMMIT_HASH` applies commit to working branch. Helpful for porting bug fixes to older versions
-`git bisect` binary search to find where a bug was introduced
-`git revert` undoes a commit by applying an opposite change set
-`git tag` allows commits to be easily found, e.g. `v3.0.1`
-`git checkout` (legacy) can be used in many ways but is hard to explain
+- `git rebase` helps keep git history clean by "rewriting history". Should never be done to shared branches
+- `git commit --amend` Lets you rewrite the last commit (You will need to "force push" to update a remote)
+- `git cherry-pick $COMMIT_HASH` applies commit to working branch. Helpful for porting bug fixes to older versions
+- `git bisect` binary search to find where a bug was introduced
+- `git revert` undoes a commit by applying an opposite change set
+- `git tag` allows commits to be easily found, e.g. `v3.0.1`
+- `git checkout` (legacy) can be used in many ways but is hard to explain
+
+## Further Reading
+
+How to write good commit messages: https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/
